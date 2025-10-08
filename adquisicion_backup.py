@@ -24,7 +24,7 @@ N_CHANNELS = 8           # Cyton estándar
 TRIALS = 2               # Número de ensayos
 CONTRACT_SEC = 2         # Duración contracción
 REST_SEC = 2            # Duración relajación
-OUTPUT_PREFIX = "subject01_session03"
+OUTPUT_PREFIX = "subject01_session02"
 TIMEOUT_SEC = 10         # Timeout si no llegan datos (segundos)
 
 # Buffers
