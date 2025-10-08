@@ -24,7 +24,7 @@ N_CHANNELS = 8           # Cyton estándar
 TRIALS = 2               # Número de ensayos
 CONTRACT_SEC = 2         # Duración contracción
 REST_SEC = 2            # Duración relajación
-OUTPUT_PREFIX = "subject01_session01"
+OUTPUT_PREFIX = "subject01_session03"
 TIMEOUT_SEC = 10         # Timeout si no llegan datos (segundos)
 
 # Buffers
@@ -92,18 +92,17 @@ def main():
         os.system('clear')
 
         print(f"\nEnsayo {trial}/{TRIALS}")
-        print("Prepararse (2s)...")
         time.sleep(2)
 
         # CONTRACCIÓN
-        print("CONTRAER AHORA!")
+        print("CONTRAE")
         start_c = time.time()
         time.sleep(CONTRACT_SEC)
         end_c = time.time()
         events.append([trial, start_c, end_c, "contraccion"])
 
         # RELAJACIÓN
-        print("RELAX...")
+        print("RELAJA...")
         start_r = time.time()
         time.sleep(REST_SEC)
         end_r = time.time()
