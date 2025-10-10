@@ -1,11 +1,11 @@
 {
     "subject": "subject01",
-    "session": "session03",
+    "session": "session05",
     "fs": 250,
     "n_channels": 8,
     "trials": 2,
     "contract_sec": 2,
     "rest_sec": 2,
     "port": "/dev/ttyUSB0",
-    "timestamp": "2025-10-10 16:59:42"
+    "timestamp": "2025-10-10 17:01:08"
 }
