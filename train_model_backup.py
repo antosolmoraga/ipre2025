@@ -8,7 +8,7 @@ import joblib  # para guardar el modelo entrenado
 # ------------------------------
 # 1. Cargar dataset
 # ------------------------------
-df = pd.read_csv("dataset_final_canal2.csv")
+df = pd.read_csv("dataset_final_canal2_baseline.csv")
 
 
 # Verifica qué columnas tiene
@@ -34,7 +34,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 # ------------------------------
 # 4. Crear modelo y entrenar
 # ------------------------------
-clf = RandomForestClassifier(n_estimators=100, random_state=42)
+clf = RandomForestClassifier(n_estimators=8, random_state=42)
 clf.fit(X_train, y_train)
 
 
@@ -45,6 +45,11 @@ y_pred = clf.predict(X_test)
 print("\nAccuracy:", accuracy_score(y_test, y_pred))
 print("\nClassification Report:\n", classification_report(y_test, y_pred))
 print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
+
+y_pred = clf.predict(X_train)
+print("\nAccuracy:", accuracy_score(y_train, y_pred))
+print("\nClassification Report:\n", classification_report(y_train, y_pred))
+print("\nConfusion Matrix:\n", confusion_matrix(y_train, y_pred))
 
 
 # ------------------------------

@@ -21,10 +21,10 @@ import numpy as np
 PORT = "/dev/ttyUSB0"    # Ajusta según tu Raspberry Pi
 FS = 250                 # Frecuencia de muestreo Cyton
 N_CHANNELS = 8           # Cyton estándar
-TRIALS = 2               # Número de ensayos
+TRIALS = 4               # Número de ensayos
 CONTRACT_SEC = 2         # Duración contracción
 REST_SEC = 2            # Duración relajación
-OUTPUT_PREFIX = "subject01_session10"
+OUTPUT_PREFIX = "subject01_session14"
 TIMEOUT_SEC = 10         # Timeout si no llegan datos (segundos)
 
 # Buffers

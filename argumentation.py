@@ -2,23 +2,23 @@ import pandas as pd
 import numpy as np
 import os
 from scipy.signal import butter, filtfilt
-from filtrado import ButterBandpassFilter
-
+from filtrado import ButterHighpassFilter
+import matplotlib.pyplot as plt
 
 # ------------------------------
 # Parámetros generales
 # ------------------------------
-FS = 250            # Frecuencia de muestreo (Hz)
-FASE_SEC = 2        # Duración de cada ventana (s)
-SAMPLES_PER_FASE = FS * FASE_SEC
+FS = 250
+FASE_SEC = 2
+SAMPLES_PER_FASE = int(0.5 * FS)
 INPUT_FOLDER = "./ensayos"
-OUTPUT_FILE = "./dataset_final_canal2.csv"
+OUTPUT_FILE = "./dataset_final_canal2_baseline.csv"
 
 
 # ------------------------------
 # Configurar filtros
 # ------------------------------
-filtro = ButterBandpassFilter(20, 80, fs=FS, order=4)
+filtro = ButterHighpassFilter(20, fs=FS, order=4)
 
 
 def butter_lowpass_filter(data, cutoff, fs, order=4):
@@ -32,13 +32,9 @@ def butter_lowpass_filter(data, cutoff, fs, order=4):
 # Preprocesamiento EMG
 # ------------------------------
 def preprocess_emg(signal):
-    # Filtro pasa banda
     filtered = filtro.apply(signal)
-    # Rectificación cuadrática
     rectified = filtered ** 2
-    # Normalización entre 0 y 1
     normalized = (rectified - np.min(rectified)) / (np.max(rectified) - np.min(rectified) + 1e-8)
-    # Suavizado con pasa bajo (4 Hz)
     smoothed = butter_lowpass_filter(normalized, cutoff=4, fs=FS)
     return smoothed
 
@@ -47,7 +43,7 @@ def preprocess_emg(signal):
 # Procesamiento de todos los archivos
 # ------------------------------
 all_windows = []
-factor = (4.5 / ((2**23 - 1) * 24)) * 16  # factor de conversión a microvoltios
+factor = (4.5 / ((2**23 - 1) * 24)) * 16  # Conversión a microvoltios
 
 
 for filename in os.listdir(INPUT_FOLDER):
@@ -55,27 +51,46 @@ for filename in os.listdir(INPUT_FOLDER):
         filepath = os.path.join(INPUT_FOLDER, filename)
         df = pd.read_csv(filepath)
 
-
         # Convertir canal 2 a microvoltios
         df["ch2_uV"] = df["ch2"] * factor
 
-
-        # Aplicar preprocesamiento EMG
+        # Aplicar preprocesamiento
         df["ch2_proc"] = preprocess_emg(df["ch2_uV"])
 
+        # eliminar primer 0.5 segundo 
+        df = df.iloc[125:].reset_index(drop=True)
 
-        # Crear vector de tiempo (opcional)
-        time = np.linspace(0, len(df) / FS, len(df))
-        df["time"] = time
+        # Calcular baseline
+        baseline_window = int(1 * FS)
+        baseline_section = df["ch2_proc"].iloc[:baseline_window]
+        baseline_value=baseline_section.mean()
+        baseline_std=baseline_section.std()
 
+        ###### restar baseline
+        df["ch2_proc"] = df["ch2_proc"] - baseline_value
 
-        # Segmentar en ventanas de 2 segundos y etiquetar
+        # Crear vector de tiempo
+        df["time"] = np.linspace(0, len(df) / FS, len(df))
+
+        ##### calcular umbral
+        threshold = 1.5 * baseline_std
+
+        # Segmentar en ventanas
         num_fases = len(df) // SAMPLES_PER_FASE
         for j in range(num_fases):
             start = j * SAMPLES_PER_FASE
             end = start + SAMPLES_PER_FASE
             ventana = df.iloc[start:end][["time", "ch2_proc"]].copy()
-            ventana["etiqueta"] = "contraccion" if j % 2 == 0 else "relajacion"
+
+            # Calcular media de la ventana
+            mean_val = ventana["ch2_proc"].mean()
+            #####threshold=baseline_value + 1.5*baseline_std
+
+            # Etiquetar respecto al baseline
+            etiqueta = "contraccion" if mean_val > threshold else "relajacion"
+            
+   
+            ventana["etiqueta"] = etiqueta
             ventana["archivo_origen"] = filename
             all_windows.append(ventana)
 
