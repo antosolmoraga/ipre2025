@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-"""
-Adquisición EMG con OpenBCI Cyton en Raspberry Pi
-- Muestra mensajes de ensayo en tiempo real
-- Guarda datos de todos los canales al final
-- Usa threading para que el stream no bloquee
-- Agrega timeout para evitar colgado si no llegan datos
-"""
 import os
 import time
 import csv
@@ -13,7 +5,6 @@ import json
 from threading import Thread
 from pyOpenBCI import OpenBCICyton
 import numpy as np
-# source ~/emg/bin/activate
 
 # ---------------------------
 # PARÁMETROS CONFIGURABLES
@@ -21,11 +12,13 @@ import numpy as np
 PORT = "/dev/ttyUSB0"    # Ajusta según tu Raspberry Pi
 FS = 250                 # Frecuencia de muestreo Cyton
 N_CHANNELS = 8           # Cyton estándar
-TRIALS = 4               # Número de ensayos
-CONTRACT_SEC = 2         # Duración contracción
-REST_SEC = 2            # Duración relajación
-OUTPUT_PREFIX = "subject01_session14"
+TRIALS = 5               # Número de ensayos
+PASO_DER = 2             # Duración paso derecho
+PASO_IZQ = 2             # Duración paso izquierdo
+OUTPUT_PREFIX = "subject01_session15"
 TIMEOUT_SEC = 10         # Timeout si no llegan datos (segundos)
+
+#### LOS ELECTRODOS VAN EN LA PIERNA DERECHA 
 
 # Buffers
 data_buffer = []
@@ -94,19 +87,19 @@ def main():
         print(f"\nEnsayo {trial}/{TRIALS}")
         time.sleep(2)
 
-        # CONTRACCIÓN
-        print("CONTRAE")
+        # PASO CON PIERNA DERECHA
+        print("PIE DERECHO")
         start_c = time.time()
-        time.sleep(CONTRACT_SEC)
+        time.sleep(PASO_DER)
         end_c = time.time()
-        events.append([trial, start_c, end_c, "contraccion"])
+        events.append([trial, start_c, end_c, "apoyo"])
 
-        # RELAJACIÓN
-        print("RELAJA...")
+        # PASO CON PIERNA IZQUIERDA
+        print("PIE IZQUIERDO")
         start_r = time.time()
-        time.sleep(REST_SEC)
+        time.sleep(PASO_IZQ)
         end_r = time.time()
-        events.append([trial, start_r, end_r, "relajacion"])
+        events.append([trial, start_r, end_r, "oscilacion"])
 
     # ---------------------------
     # FINALIZAR ADQUISICIÓN
@@ -150,8 +143,8 @@ def main():
         "fs": FS,
         "n_channels": N_CHANNELS,
         "trials": TRIALS,
-        "contract_sec": CONTRACT_SEC,
-        "rest_sec": REST_SEC,
+        "apoyo": PASO_DER,
+        "oscilacion": PASO_IZQ,
         "port": PORT,
         "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
     }
@@ -163,3 +156,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
