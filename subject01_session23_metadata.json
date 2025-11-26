@@ -1,0 +1,11 @@
+{
+    "subject": "subject01",
+    "session": "session23",
+    "fs": 250,
+    "n_channels": 8,
+    "trials": 10,
+    "apoyo": 2,
+    "oscilacion": 2,
+    "port": "/dev/ttyUSB0",
+    "timestamp": "2025-11-25 21:18:52"
+}
