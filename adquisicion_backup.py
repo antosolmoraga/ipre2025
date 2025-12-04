@@ -12,10 +12,10 @@ import numpy as np
 PORT = "/dev/ttyUSB0"    # Ajusta según tu Raspberry Pi
 FS = 250                 # Frecuencia de muestreo Cyton
 N_CHANNELS = 8           # Cyton estándar
-TRIALS = 10               # Número de ensayos
-PASO_DER = 2             # Duración paso derech
-PASO_IZQ = 2             # Duración paso izquierdo
-OUTPUT_PREFIX = "subject01_session23"
+TRIALS = 30               # Número de ensayos
+PASO_DER = 1             # Duración paso derech
+PASO_IZQ = 1             # Duración paso izquierdo
+OUTPUT_PREFIX = "subject01_session24"
 TIMEOUT_SEC = 10         # Timeout si no llegan datos (segundos)
 
 #### LOS ELECTRODOS VAN EN LA PIERNA DERECHA 
@@ -84,8 +84,8 @@ def main():
     for trial in range(1, TRIALS + 1):
         os.system('clear')
 
-        print(f"\nEnsayo {trial}/{TRIALS}")
-        time.sleep(2)
+	#print(f"\nEnsayo {trial}/{TRIALS}")
+        #time.sleep(2)
 
         # PASO CON PIERNA DERECHA
         print("PIE DERECHO")
