@@ -107,24 +107,37 @@ for filename in os.listdir(INPUT_FOLDER):
         ax1.plot(df['time'], df['ch4_proc'], color=color, linewidth=0.8, label='EMG Filtrado')
         ax1.tick_params(axis='y', labelcolor=color)
         
-        ax1.plot(df['time'],df['ch2_proc'],color='blue',linewidth=1.5,label='Ch2 - Músculo A')
-        ax1.plot(df['time'],df['ch4_proc'],color='green',linewidth=1.5,label='Ch4 - Músculo B')
-        ax1.plot(df['time'],df['ch6_proc'],color='red',linewidth=1.5,label='Ch6 - Músculo C')
+        ax1.plot(df['time'],df['ch2_proc'],color='blue',linewidth=1.5,label='Ch2 - Cuádricep (Vasto Ext.) Pierna Der')
+        ax1.plot(df['time'],df['ch4_proc'],color='green',linewidth=1.5,label='Ch4 - Cuádricep (Vasto Int.) Pierna Der')
+        ax1.plot(df['time'],df['ch6_proc'],color='red',linewidth=1.5,label='Ch6 - Cuádricep (Vasto Ext.) Pierna Izq')
         ax1.legend(loc='upper left')
 
         # Añadir título 
         plt.title(f"Señal y Etiquetas: {filename}")
         
-        # Eje Y derecho: Etiquetas (Eventos) 
-        # # Instanciamos un segundo eje que comparte el mismo eje X 
-        ax2 = ax1.twinx() 
-        color = 'tab:orange' 
-        ax2.set_ylabel('Etiqueta (Fase)', color=color) 
-        
-        # Usamos fill_between para que se vea como "bloques" de color de fondo 
-        ax2.fill_between(df['time'], df['etiqueta'], color=color, alpha=0.3, label='Apoyo (1)') 
-        ax2.tick_params(axis='y', labelcolor=color) 
-        ax2.set_ylim(0, 1.5) # Fijar limite para que el bloque no tape toda la señal
+        # Eje Y derecho: Etiquetas (Eventos)
+        ax2 = ax1.twinx()
+        ax2.set_ylabel('Etiqueta (Fase)', color='black')
+        ax2.set_ylim(0, 1.5)
+
+        # --- NUEVO: Colores personalizados ---
+        color_apoyo = 'orange'
+        color_oscil = 'purple'
+
+        # --- NUEVO: Dibujar bloques de ambas fases ---
+        # Fase de APOYO (etiqueta == 1)
+        mask_apoyo = df['etiqueta'] == 1
+        ax2.fill_between(df['time'], 0, 1, where=mask_apoyo,
+                        color=color_apoyo, alpha=0.15, label='Apoyo')
+
+        # Fase de OSCILACIÓN (etiqueta == 0)
+        mask_oscil = df['etiqueta'] == 0
+        ax2.fill_between(df['time'], 0, 1, where=mask_oscil,
+                        color=color_oscil, alpha=0.15, label='Oscilación')
+
+        # --- NUEVO: Mostrar leyenda ---
+        ax2.legend(loc='upper right')
+
 
         fig.tight_layout() 
         plt.show()
@@ -136,4 +149,3 @@ for filename in os.listdir(INPUT_FOLDER):
 dataset_final = pd.concat(all_windows, ignore_index=True)
 dataset_final.to_csv(OUTPUT_FILE, index=False)
 print(f" Dataset final guardado en {OUTPUT_FILE} con {len(dataset_final)} filas.")
-
