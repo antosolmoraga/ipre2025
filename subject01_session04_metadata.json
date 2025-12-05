@@ -3,9 +3,9 @@
     "session": "session04",
     "fs": 250,
     "n_channels": 8,
-    "trials": 2,
-    "contract_sec": 2,
-    "rest_sec": 2,
+    "trials": 30,
+    "apoyo": 1,
+    "oscilacion": 1,
     "port": "/dev/ttyUSB0",
-    "timestamp": "2025-10-08 19:50:22"
+    "timestamp": "2025-12-05 19:48:17"
 }
