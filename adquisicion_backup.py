@@ -15,7 +15,7 @@ N_CHANNELS = 8           # Cyton estándar
 TRIALS = 30               # Número de ensayos
 PASO_DER = 1             # Duración paso derech
 PASO_IZQ = 1             # Duración paso izquierdo
-OUTPUT_PREFIX = "subject01_session27"
+OUTPUT_PREFIX = "subject01_session02"
 TIMEOUT_SEC = 10         # Timeout si no llegan datos (segundos)
 
 #### LOS ELECTRODOS VAN EN LA PIERNA DERECHA 

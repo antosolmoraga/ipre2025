@@ -8,7 +8,7 @@ import joblib  # para guardar el modelo entrenado
 # ------------------------------
 # 1. Cargar dataset
 # ------------------------------
-df = pd.read_csv("dataset_final_canal2_baseline.csv")
+df = pd.read_csv("dataset_final_canal2y4.csv")
 
 
 # Verifica qué columnas tiene
@@ -19,7 +19,7 @@ print("Columnas del dataset:", df.columns.tolist())
 # 2. Separar características (X) y etiquetas (y)
 # ------------------------------
 # Solo usaremos la columna procesada del canal 2
-X = df[["ch2_proc"]]
+X = df[["ch2_proc", "ch4_proc", "ch6_proc"]]
 y = df["etiqueta"]
 
 
@@ -55,5 +55,5 @@ print("\nConfusion Matrix:\n", confusion_matrix(y_train, y_pred))
 # ------------------------------
 # 6. Guardar modelo entrenado
 # ------------------------------
-joblib.dump(clf, "emg_model_canal2.pkl")
-print("\n Modelo guardado como 'emg_model_canal2.pkl'")
+joblib.dump(clf, "emg_model.pkl")
+print("\n Modelo guardado como 'emg_model.pkl'")
